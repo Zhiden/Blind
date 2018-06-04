@@ -78,7 +78,11 @@ public class DayActivity extends AppCompatActivity implements TextToSpeech.OnIni
                 if (sad > 1) {
                     int buf = --sad;
                     day.setText(String.valueOf(buf));
-                    mTTS.speak(String.valueOf(buf) + "ое", TextToSpeech.QUEUE_FLUSH, null);
+
+                    if (String.valueOf(buf).equals("3") || String.valueOf(buf).equals("23"))
+                        mTTS.speak(String.valueOf(buf) + "е", TextToSpeech.QUEUE_FLUSH, null);
+                    else
+                        mTTS.speak(String.valueOf(buf) + "ое", TextToSpeech.QUEUE_FLUSH, null);
                 }
 
             }
@@ -87,7 +91,10 @@ public class DayActivity extends AppCompatActivity implements TextToSpeech.OnIni
                 if (sad < dayscounter) {
                     int buf1 = ++sad;
                     day.setText(String.valueOf(buf1));
-                    mTTS.speak(String.valueOf(buf1) + "ое", TextToSpeech.QUEUE_FLUSH, null);
+                    if (String.valueOf(buf1).equals("3") || String.valueOf(buf1).equals("23"))
+                        mTTS.speak(String.valueOf(buf1) + "е", TextToSpeech.QUEUE_FLUSH, null);
+                    else
+                        mTTS.speak(String.valueOf(buf1) + "ое", TextToSpeech.QUEUE_FLUSH, null);
                 }
             }
 

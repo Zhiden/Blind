@@ -9,11 +9,11 @@ import android.view.View;
  * Created by drcov on 04.06.2018.
  */
 
-public class OnSwipeTopAndBot implements View.OnTouchListener {
+public class OnSwipeTop implements View.OnTouchListener {
 
     private final GestureDetector gestureDetector;
 
-    public OnSwipeTopAndBot(Context ctx) {
+    public OnSwipeTop(Context ctx) {
         gestureDetector = new GestureDetector(ctx, new GestureListener());
     }
 
@@ -23,13 +23,6 @@ public class OnSwipeTopAndBot implements View.OnTouchListener {
     }
 
     public void onSwipeTop() {
-    }
-
-    public void onSwipeBottom() {
-    }
-
-    public void onClick() {
-
     }
 
     private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -42,11 +35,6 @@ public class OnSwipeTopAndBot implements View.OnTouchListener {
             return true;
         }
 
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            onClick();
-            return super.onDoubleTap(e);
-        }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -55,9 +43,7 @@ public class OnSwipeTopAndBot implements View.OnTouchListener {
                 float diffY = e2.getY() - e1.getY();
                 float diffX = e2.getX() - e1.getX();
                 if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
-                        onSwipeBottom();
-                    } else {
+                    if (diffY < 0) {
                         onSwipeTop();
                     }
                     result = true;
@@ -68,4 +54,5 @@ public class OnSwipeTopAndBot implements View.OnTouchListener {
             return result;
         }
     }
+
 }

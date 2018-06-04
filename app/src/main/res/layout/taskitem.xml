@@ -3,8 +3,6 @@
     android:id="@+id/taitem"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginEnd="15dp"
-    android:layout_marginStart="15dp"
     android:paddingTop="100dp"
     android:text="Въебать владу по лицу,а то он пес"
     android:textAlignment="center"

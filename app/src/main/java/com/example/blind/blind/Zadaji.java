@@ -1,24 +1,19 @@
 package com.example.blind.blind;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 
-public class Zadaji extends AppCompatActivity implements EditNameDialogListener{
+public class Zadaji extends AppCompatActivity implements EditNameDialogListener {
     final MyAdapter adapter = new MyAdapter(this, getFragmentManager());
     private RecyclerView rv;
 
@@ -59,15 +54,16 @@ public class Zadaji extends AppCompatActivity implements EditNameDialogListener{
                 tasks) {
             adapter.add(t);
         }
-        if (tasks.size() == 0)
-            adapter.showEditDialog();
+        if (tasks.size() > 0)
+            rv.smoothScrollToPosition(1);
     }
-
 
 
     @Override
     public void onFinishEditDialog(String inputText) {
         Task t = new Task();
+
+        t.setId(adapter.getLastId() + 1);
         t.setDay(getIntent().getIntExtra("sad", -1));
         t.setMonth(getIntent().getStringExtra("month"));
         t.setText(inputText);

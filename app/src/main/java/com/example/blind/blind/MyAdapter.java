@@ -6,11 +6,9 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +21,29 @@ import java.util.Locale;
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements TextToSpeech.OnInitListener {
     private List<Task> tasks = new ArrayList<>();
     private Context context;
-    private FragmentManager fm ;
+    private FragmentManager fm;
     private TextToSpeech mTTS;
 
 
     public MyAdapter(Context context, FragmentManager fm) {
         this.fm = fm;
         this.context = context;
-        //tasks.add(new Task());
+        Task main = new Task();
+        main.setText("Список задач:");
+        tasks.add(main);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mTTS = new TextToSpeech(context, this);
+
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.taskitem, parent, false);
         final ViewHolder h = new ViewHolder(v);
-
-        v.setOnTouchListener(new OnSwipeTopAndBot(context){
+        mTTS = new TextToSpeech(context, this);
+        v.setOnTouchListener(new OnSwipeTopAndBot(context) {
             @Override
             public void onSwipeTop() {
                 mTTS.speak("Добавление задачи", TextToSpeech.QUEUE_FLUSH, null);
+
                 showEditDialog();
             }
 
@@ -50,7 +51,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Te
             public void onClick() {
                 int pos = h.getAdapterPosition();
 
-                    mTTS.speak(tasks.get(pos).getText(), TextToSpeech.QUEUE_FLUSH, null);
+                mTTS.speak(tasks.get(pos).getText(), TextToSpeech.QUEUE_FLUSH, null);
             }
 
             @Override
@@ -59,7 +60,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Te
                     int pos = h.getAdapterPosition();
                     mTTS.speak("Удаление задачи " + tasks.get(pos).getText(), TextToSpeech.QUEUE_FLUSH, null);
                     delete(tasks.get(pos), pos);
-                } else if (tasks.size() < 1)
+                } else if (tasks.size() == 1)
                     mTTS.speak("Удаление невозможно", TextToSpeech.QUEUE_FLUSH, null);
             }
         });
@@ -75,14 +76,13 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Te
     }
 
 
-
-    public void delete(Task t, int pos){
+    public void delete(Task t, int pos) {
         tasks.remove(t);
         App.getDbHelper().delete(t);
         notifyItemRemoved(pos);
         notifyItemRangeChanged(pos, tasks.size());
-    }
 
+    }
 
 
     @Override
@@ -95,7 +95,11 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Te
         notifyDataSetChanged();
     }
 
-
+    public int getLastId() {
+        if (tasks.size() > 0)
+            return tasks.get(tasks.size() - 1).getId();
+        return 0;
+    }
 
     @Override
     public void onInit(int i) {
@@ -118,6 +122,12 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Te
         }
     }
 
+    public void showEditDialog() {
+
+        NewTaskDialog editNameDialog = new NewTaskDialog();
+        editNameDialog.show(fm, "edittext");
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv;
 
@@ -131,12 +141,5 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> implements Te
         public void setTv(String tv) {
             this.tv.setText(tv);
         }
-    }
-
-    public void showEditDialog() {
-
-
-        NewTaskDialog editNameDialog = new NewTaskDialog();
-        editNameDialog.show(fm, "edittext");
     }
 }

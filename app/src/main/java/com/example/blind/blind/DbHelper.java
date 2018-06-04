@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import junit.framework.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +37,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void addTask(Task t) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        cv.put("_id", t.getId());
         cv.put("text", t.getText());
         cv.put("month", t.getMonth());
         cv.put("day", t.getDay());
@@ -49,12 +48,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<Task> getTasks(int day, String month){
+    public List<Task> getTasks(int day, String month) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query("mytable",
-                new String[] {"_id","text", "month", "day"},
+                new String[]{"_id", "text", "month", "day"},
                 "month = ? and day = ?",
-                new String[] {month, String.valueOf(day)}, null, null, null);
+                new String[]{month, String.valueOf(day)}, null, null, null);
         List<Task> tasks = new ArrayList<>();
         if (cursor.moveToFirst()) {
 
@@ -88,11 +87,11 @@ public class DbHelper extends SQLiteOpenHelper {
         return tasks;
     }
 
-    public void delete(Task pos){
+    public void delete(Task pos) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete("mytable",
                 "_id = ?",
-                new String[] {String.valueOf(pos.getId())});
+                new String[]{String.valueOf(pos.getId())});
         db.close();
     }
 }
